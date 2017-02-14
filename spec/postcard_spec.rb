@@ -1,3 +1,5 @@
+require_relative '../postcard'
+
 RSpec.describe Postcard do
   let(:subject) { described_class.new(name, sender) }
   let(:content_lines) { subject.content.split("\n") }
