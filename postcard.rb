@@ -1,26 +1,79 @@
 class Postcard
   attr_reader :name, :sender
 
+  PADDING_SIZE = 3
+
   def initialize(name, sender)
     @name = name
     @sender = sender
   end
 
   def content
-    miss_you = "We miss you, #{name}!"
-    signature = "-- #{sender}"
+    border +
+    blank_line +
+    miss_you_line +
+    get_well_line +
+    blank_line +
+    signature_line +
+    blank_line +
+    border
+  end
 
-    ljust_length = [miss_you.length, signature.length].max
-    get_well_text = 'Get well soon!'.ljust(ljust_length, ' ')
-    miss_you_text = miss_you.ljust(ljust_length, ' ')
-    signature_text = signature.ljust(ljust_length, ' ')
+  private
 
-    miss_you_line = "|   #{miss_you_text}   |\n"
-    get_well_line = "|   #{get_well_text}   |\n"
-    border = "+---#{'-'*ljust_length}---+\n"
-    blank_line = "|   #{' '*ljust_length}   |\n"
-    signature_line = "|   #{signature_text}   |\n"
+  def miss_you
+    "We miss you, #{name}!"
+  end
 
-    border + blank_line + miss_you_line + get_well_line + blank_line + signature_line + blank_line + border
+  def signature
+    "-- #{sender}"
+  end
+
+  def get_well_soon
+    'Get well soon!'
+  end
+
+  def miss_you_line
+    bordered_line(miss_you)
+  end
+
+  def get_well_line
+    bordered_line(get_well_soon)
+  end
+
+  def blank_line
+    bordered_line(' ')
+  end
+
+  def signature_line
+    bordered_line(signature)
+  end
+
+  def border
+    line('+', border_padding, '-' * inner_content_length)
+  end
+
+  def bordered_line(content)
+    line('|', line_padding, justified_content(content))
+  end
+
+  def line(border_char, padding, content)
+    border_char + padding + content + padding + border_char + "\n"
+  end
+
+  def border_padding
+    '-' * PADDING_SIZE
+  end
+
+  def line_padding
+    ' ' * PADDING_SIZE
+  end
+
+  def justified_content(content)
+    content.ljust(inner_content_length, ' ')
+  end
+
+  def inner_content_length
+    [miss_you.length, signature.length].max
   end
 end
